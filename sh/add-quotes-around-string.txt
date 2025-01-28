@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Check if an argument was provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <filename>"
+    exit 1
+fi
+
+# Filename from the argument
+INPUT_FILE="$1"
+OUTPUT_FILE="${INPUT_FILE}_quoted"
+
+# Check if the input file exists
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: File '$INPUT_FILE' not found."
+    exit 1
+fi
+
+# Prepare the output file
+echo -n "" > "$OUTPUT_FILE"
+
+# Read each line of the input file and process it
+while IFS= read -r line || [[ -n "$line" ]]; do
+    echo "'$line'," >> "$OUTPUT_FILE"
+done < "$INPUT_FILE"
+
+# Remove the last comma from the file
+sed -i '$ s/,$//' "$OUTPUT_FILE"
+
+echo "Output written to $OUTPUT_FILE"
